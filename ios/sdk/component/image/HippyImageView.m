@@ -662,6 +662,10 @@ UIImage *HippyBlurredImageWithRadiusv(UIImage *inputImage, CGFloat radius)
     return radius;
 }
 
+- (UIImage *)imageAtIndex:(NSUInteger)index {
+    return nil;
+}
+
 @end
 
 @implementation UIImage (Hippy)
@@ -713,6 +717,7 @@ HIPPY_ENUM_CONVERTER(HippyResizeMode, (@{
                 HippyImageView *sIV = wIV;
                 NSString *sURL = wURL;
                 [sIV loadImage:animatedImage.posterImage url:sURL error:nil needBlur:NO needCache:NO];
+                animatedImage.animatedImageProvider = sIV;
                 sIV.animatedImage = animatedImage;
             });
         }

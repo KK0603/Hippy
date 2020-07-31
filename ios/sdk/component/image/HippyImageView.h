@@ -25,8 +25,11 @@
 #import "HippyConvert.h"
 #import "HippyAnimatedImageView.h"
 #import "HippyMemoryOpt.h"
+#import "HippyAnimatedImage.h"
+
 @class HippyBridge;
 @class HippyImageView;
+
 @interface HippyAnimatedImageOperation : NSOperation {
     NSData *_animatedImageData;
     NSString *_url;
@@ -45,7 +48,7 @@ typedef NS_ENUM(NSInteger, HippyResizeMode) {
 	HippyResizeModeRepeat = -1, // Use negative values to avoid conflicts with iOS enum values.
 };
 
-@interface HippyImageView : HippyAnimatedImageView <NSURLSessionDelegate, HippyMemoryOpt>
+@interface HippyImageView : HippyAnimatedImageView <NSURLSessionDelegate, HippyMemoryOpt, HippyAnimatedImageProviderProtocol>
 
 @property (nonatomic, assign) CGFloat blurRadius;
 @property (nonatomic, assign) UIEdgeInsets capInsets;

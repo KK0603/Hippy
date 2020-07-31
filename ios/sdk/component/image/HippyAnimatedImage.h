@@ -43,6 +43,14 @@ extern const NSTimeInterval kHippyAnimatedImageDelayTimeIntervalMinimum;
 //  It tries to intelligently choose the frame cache size depending on the image and memory situation with the goal to lower CPU usage for smaller ones, lower memory usage for larger ones and always deliver frames for high performant play-back.
 //  Note: `posterImage`, `size`, `loopCount`, `delayTimes` and `frameCount` don't change after successful initialization.
 //
+
+@protocol HippyAnimatedImageProviderProtocol <NSObject>
+
+@optional
+- (UIImage *)imageAtIndex:(NSUInteger)index;
+
+@end
+
 @interface HippyAnimatedImage : NSObject
 
 @property (nonatomic, strong, readonly) UIImage *posterImage; // Guaranteed to be loaded; usually equivalent to `-imageLazilyCachedAtIndex:0`
@@ -73,6 +81,8 @@ extern const NSTimeInterval kHippyAnimatedImageDelayTimeIntervalMinimum;
 + (instancetype)animatedImageWithGIFData:(NSData *)data;
 
 @property (nonatomic, strong, readonly) NSData *data; // The data the receiver was initialized with; read-only
+
+@property (nonatomic, weak) id<HippyAnimatedImageProviderProtocol> animatedImageProvider;
 
 @end
 

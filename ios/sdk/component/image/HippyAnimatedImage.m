@@ -509,16 +509,23 @@ static NSHashTable *allAnimatedImagesWeak;
 
 - (UIImage *)imageAtIndex:(NSUInteger)index
 {
-    // It's very important to use the cached `_imageSource` since the random access to a frame with `CGImageSourceCreateImageAtIndex` turns from an O(1) into an O(n) operation when re-initializing the image source every time.
-    CGImageRef imageRef = CGImageSourceCreateImageAtIndex(_imageSource, index, NULL);
-
-    // Early return for nil
-    if (!imageRef) {
-        return nil;
+    UIImage *image = nil;
+    
+    if ([[self animatedImageProvider] respondsToSelector:@selector(imageAtIndex:)]) {
+        image = [[self animatedImageProvider] imageAtIndex:index];
     }
+    if (nil == image) {
+        // It's very important to use the cached `_imageSource` since the random access to a frame with `CGImageSourceCreateImageAtIndex` turns from an O(1) into an O(n) operation when re-initializing the image source every time.
+        CGImageRef imageRef = CGImageSourceCreateImageAtIndex(_imageSource, index, NULL);
 
-    UIImage *image = [UIImage imageWithCGImage:imageRef];
-    CFRelease(imageRef);
+        // Early return for nil
+        if (!imageRef) {
+            return nil;
+        }
+
+        image = [UIImage imageWithCGImage:imageRef];
+        CFRelease(imageRef);
+    }
     
     // Loading in the image object is only half the work, the displaying image view would still have to synchronosly wait and decode the image, so we go ahead and do that here on the background thread.
     if (self.isPredrawingEnabled) {
